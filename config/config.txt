@@ -17,19 +17,19 @@ $include atmos_mix.txt
 # There are various options which are hard-locked for security reasons.
 
 ## Server name: This appears at the top of the screen in-game and in the BYOND hub. Uncomment and replace 'Shiptest' with the name of your choice.
-# SERVERNAME Shiptest
+SERVERNAME Fleet Station 13
 
 ## Server SQL name: This is the name used to identify the server to the SQL DB, distinct from SERVERNAME as it must be at most 32 characters.
 # SERVERSQLNAME shiptest
 
 ## Station name: The name of the station as it is referred to in-game. If commented out, the game will generate a random name instead.
-STATIONNAME Space Station 13
+# STATIONNAME Space Station 13
 
 ## Put on byond hub: Uncomment this to put your server on the byond hub.
 #HUB
 
 ## Lobby time: This is the amount of time between rounds that players have to setup their characters and be ready.
-LOBBY_COUNTDOWN 120
+LOBBY_COUNTDOWN 240
 
 ## Round End Time: This is the amount of time after the round ends that players have to murder death kill each other.
 ROUND_END_COUNTDOWN 90
@@ -207,7 +207,7 @@ VOTE_AUTOTRANSFER_INTERVAL 18000
 # DEFAULT_NO_VOTE
 
 ## disable abandon mob
-#NORESPAWN
+# NORESPAWN
 
 ## disables calling del(src) on newmobs if they logout before spawnin in
 # DONT_DEL_NEWMOB
@@ -563,7 +563,7 @@ AUTO_PROFILE
 ## Respawn Timer for Respawn in deciseconds
 ## Setting it to 0 disables the respawn timer.
 ## THIS CONFIG DOES NOT OVERRIDE THE NORESPAWN FLAG
-RESPAWN_TIMER 600
+RESPAWN_TIMER 0
 
 ## Custom shuttle spam prevention. Changine these numbers allows you to change the maxsize and amount of custom shuttles.
 MAX_SHUTTLE_COUNT 20
