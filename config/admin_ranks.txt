@@ -44,12 +44,12 @@ Include = @ SPAWN VAREDIT BAN
 Exclude =
 Edit =
 
-Name = Admin
+Name = Game Admin
 Include = @ STEALTH SOUND DEBUG POSSESS POLL BUILD SERVER FUN
 Exclude =
 Edit =
 
-Name = Senior Admin
+Name = Game Master
 Include = EVERYTHING
 Exclude =
 Edit = EVERYTHING
