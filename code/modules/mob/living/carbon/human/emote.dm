@@ -58,7 +58,7 @@
 	var/mob/living/carbon/human/H = user
 	if(H.mind?.miming)
 		return
-	if(ishumanbasic(H) || isfelinid(H))
+	if(ishumanbasic(H))
 		if(user.gender == FEMALE)
 			return pick('sound/voice/human/femalescream_1.ogg', 'sound/voice/human/femalescream_2.ogg', 'sound/voice/human/femalescream_3.ogg', 'sound/voice/human/femalescream_4.ogg', 'sound/voice/human/femalescream_5.ogg')
 		else
@@ -68,10 +68,37 @@
 	else if(ismoth(H))
 		return 'sound/voice/moth/scream_moth.ogg'
 	else if(issquidperson(H)) //WS squids go blubbblp
-		return 'whitesands/sound/voice/squid/squidscream.ogg'
+		return 'sound/voice/squid/squidscream.ogg'
 	else if(islizard(H))
 		return pick('sound/voice/lizard/lizard_scream_1.ogg', 'sound/voice/lizard/lizard_scream_2.ogg', 'sound/voice/lizard/lizard_scream_3.ogg', 'sound/voice/lizard/lizard_scream_4.ogg')
 
+/datum/emote/living/carbon/human/hiss
+	key = "hiss"
+	key_third_person = "hisses"
+	message = "hisses!"
+	emote_type = EMOTE_AUDIBLE
+	vary = TRUE
+
+/datum/emote/living/carbon/human/hiss/get_sound(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if (islizard(H))
+		return 'sound/voice/lizard/hiss.ogg'
+
+/datum/emote/living/carbon/human/weh
+	key = "weh"
+	key_third_person = "lets out a weh"
+	message = "lets out a weh!"
+	emote_type = EMOTE_AUDIBLE
+	vary = TRUE
+
+/datum/emote/living/carbon/human/weh/get_sound(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if (islizard(H))
+		return 'sound/voice/lizard/weh.ogg'
 
 /datum/emote/living/carbon/human/pale
 	key = "pale"
@@ -232,7 +259,7 @@
 	if(..())
 		playsound(user.loc, 'sound/machines/ping.ogg', 50)
 
- // Clown Robotic Tongue ONLY. Henk.
+// Clown Robotic Tongue ONLY. Henk.
 
 /datum/emote/living/carbon/human/robot_tongue/clown/can_run_emote(mob/user, status_check = TRUE , intentional)
 	if(!..())

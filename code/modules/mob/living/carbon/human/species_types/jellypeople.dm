@@ -3,18 +3,20 @@
 	name = "\improper Jellyperson"
 	id = SPECIES_JELLYPERSON
 	default_color = "00FF90"
-	say_mod = "chirps"
 	species_traits = list(MUTCOLORS,EYECOLOR,NOBLOOD,NO_BONES,HAIR,FACEHAIR)
 	inherent_traits = list(TRAIT_TOXINLOVER)
 	hair_color = "mutcolor"
 	hair_alpha = 150
 	mutantlungs = /obj/item/organ/lungs/slime
+	mutanttongue = /obj/item/organ/tongue/slime
 	meat = /obj/item/reagent_containers/food/snacks/meat/slab/human/mutant/slime
 	exotic_blood = /datum/reagent/toxin/slimejelly
 	damage_overlay_type = ""
 	var/datum/action/innate/regenerate_limbs/regenerate_limbs
 	var/datum/action/innate/humanoid_customization/humanoid_customization
 	liked_food = MEAT
+	disliked_food = NONE
+	toxic_food = NONE
 	coldmod = 6   // = 3x cold damage
 	heatmod = 0.5 // = 1/4x heat damage
 	burnmod = 0.5 // = 1/2x generic burn damage
@@ -28,8 +30,8 @@
 	species_head = /obj/item/bodypart/head/jelly
 	species_l_arm = /obj/item/bodypart/l_arm/jelly
 	species_r_arm = /obj/item/bodypart/r_arm/jelly
-	species_l_leg = /obj/item/bodypart/l_leg/jelly
-	species_r_leg = /obj/item/bodypart/r_leg/jelly
+	species_l_leg = /obj/item/bodypart/leg/left/jelly
+	species_r_leg = /obj/item/bodypart/leg/right/jelly
 
 /datum/species/jelly/on_species_loss(mob/living/carbon/C)
 	if(regenerate_limbs)
@@ -218,7 +220,6 @@
 	id = SPECIES_SLIMEPERSON
 	default_color = "00FFFF"
 	species_traits = list(MUTCOLORS,EYECOLOR,HAIR,FACEHAIR,NOBLOOD)
-	say_mod = "says"
 	hair_color = "mutcolor"
 	hair_alpha = 150
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
@@ -230,8 +231,8 @@
 	species_head = /obj/item/bodypart/head/slime
 	species_l_arm = /obj/item/bodypart/l_arm/slime
 	species_r_arm = /obj/item/bodypart/r_arm/slime
-	species_l_leg = /obj/item/bodypart/l_leg/slime
-	species_r_leg = /obj/item/bodypart/r_leg/slime
+	species_l_leg = /obj/item/bodypart/leg/left/slime
+	species_r_leg = /obj/item/bodypart/leg/right/slime
 
 /datum/species/jelly/slime/on_species_loss(mob/living/carbon/C)
 	if(slime_split)
@@ -514,7 +515,6 @@
 /datum/species/jelly/luminescent
 	name = "Luminescent"
 	id = SPECIES_LUMINESCENT
-	say_mod = "says"
 	var/glow_intensity = LUMINESCENT_DEFAULT_GLOW
 	var/obj/effect/dummy/luminescent_glow/glow
 	var/obj/item/slime_extract/current_extract

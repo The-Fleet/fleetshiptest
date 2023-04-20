@@ -1,7 +1,7 @@
 /obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	icon = 'goon/icons/obj/crates.dmi'
+	icon = 'icons/obj/crates.dmi'
 	icon_state = "crate"
 	req_access = null
 	can_weld_shut = FALSE
@@ -160,10 +160,18 @@
 	new /obj/item/bodypart/l_arm/robot/surplus(src)
 	new /obj/item/bodypart/r_arm/robot/surplus(src)
 	new /obj/item/bodypart/r_arm/robot/surplus(src)
-	new /obj/item/bodypart/l_leg/robot/surplus(src)
-	new /obj/item/bodypart/l_leg/robot/surplus(src)
-	new /obj/item/bodypart/r_leg/robot/surplus(src)
-	new /obj/item/bodypart/r_leg/robot/surplus(src)
+	new /obj/item/bodypart/leg/left/robot/surplus(src)
+	new /obj/item/bodypart/leg/left/robot/surplus(src)
+	new /obj/item/bodypart/leg/right/robot/surplus(src)
+	new /obj/item/bodypart/leg/right/robot/surplus(src)
+	new /obj/item/bodypart/l_arm/robot/surplus/kepori(src)
+	new /obj/item/bodypart/r_arm/robot/surplus/kepori(src)
+	new /obj/item/bodypart/leg/left/robot/surplus/kepori(src)
+	new /obj/item/bodypart/leg/right/robot/surplus/kepori(src)
+	new /obj/item/bodypart/l_arm/robot/surplus/vox(src)
+	new /obj/item/bodypart/r_arm/robot/surplus/vox(src)
+	new /obj/item/bodypart/leg/left/robot/surplus/vox(src)
+	new /obj/item/bodypart/leg/right/robot/surplus/vox(src)
 
 /obj/structure/closet/crate/radiation
 	desc = "A crate with a radiation sign on it."

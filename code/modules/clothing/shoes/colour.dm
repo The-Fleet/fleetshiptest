@@ -1,5 +1,6 @@
 /obj/item/clothing/shoes/sneakers
 	dying_key = DYE_REGISTRY_SNEAKERS
+	supports_variations = DIGITIGRADE_VARIATION
 
 /obj/item/clothing/shoes/sneakers/black
 	name = "black shoes"
@@ -56,7 +57,7 @@
 	if (src.chained)
 		src.chained = null
 		src.slowdown = SHOES_SLOWDOWN
-		new /obj/item/restraints/handcuffs( user.loc )
+		new /obj/item/restraints/handcuffs(user.loc)
 		src.icon_state = "orange"
 	return
 

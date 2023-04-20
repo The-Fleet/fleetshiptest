@@ -9,7 +9,7 @@
 	icon = 'icons/obj/atmos.dmi'
 	icon_state = "sheater-off"
 	name = "space heater"
-	desc = "Made by Space Amish using traditional space techniques, this heater/cooler is guaranteed not to set the station on fire. Warranty void if used in engines."
+	desc = "Made by Space Amish using traditional space techniques, this heater/cooler is guaranteed* not to set the air on fire. Warranty void if used in engines."
 	max_integrity = 250
 	armor = list("melee" = 0, "bullet" = 0, "laser" = 0, "energy" = 0, "bomb" = 0, "bio" = 100, "rad" = 100, "fire" = 80, "acid" = 10)
 	circuit = /obj/item/circuitboard/machine/space_heater
@@ -71,7 +71,7 @@
 		. += "sheater-open"
 
 /obj/machinery/space_heater/process_atmos() //TODO figure out delta_time
-	if(!on || !is_operational())
+	if(!on || !is_operational)
 		if (on) // If it's broken, turn it off too
 			on = FALSE
 		return PROCESS_KILL

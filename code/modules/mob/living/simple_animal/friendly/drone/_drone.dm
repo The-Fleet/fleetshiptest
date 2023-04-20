@@ -25,22 +25,22 @@
 #define SCOUTDRONE_HACKED "drone_scout_hacked"
 
 /**
-  * # Maintenance Drone
-  *
-  * Small player controlled fixer-upper
-  *
-  * The maintenace drone is a ghost role with the objective to repair and
-  * maintain the station.
-  *
-  * Featuring two dexterous hands, and a built in toolbox stocked with
-  * tools.
-  *
-  * They have laws to prevent them from doing anything else.
-  *
-  */
+ * # Maintenance Drone
+ *
+ * Small player controlled fixer-upper
+ *
+ * The maintenace drone is a ghost role with the objective to repair and
+ * maintain the station.
+ *
+ * Featuring two dexterous hands, and a built in toolbox stocked with
+ * tools.
+ *
+ * They have laws to prevent them from doing anything else.
+ *
+ */
 /mob/living/simple_animal/drone
 	name = "Drone"
-	desc = "A maintenance drone, an expendable robot built to perform station repairs."
+	desc = "A maintenance drone, an expendable robot built to perform structural repairs to remote frontier installations."
 	icon = 'icons/mob/drone.dmi'
 	icon_state = "drone_maint_grey"
 	icon_living = "drone_maint_grey"
@@ -246,14 +246,14 @@
 
 
 /**
-  * Alerts drones about different priorities of alarms
-  *
-  * Arguments:
-  * * class - One of the keys listed in [/mob/living/simple_animal/drone/var/alarms]
-  * * A - [/area] the alarm occurs
-  * * O - unused argument, see [/mob/living/silicon/robot/triggerAlarm]
-  * * alarmsource - [/atom] source of the alarm
-  */
+ * Alerts drones about different priorities of alarms
+ *
+ * Arguments:
+ * * class - One of the keys listed in [/mob/living/simple_animal/drone/var/alarms]
+ * * A - [/area] the alarm occurs
+ * * O - unused argument, see [/mob/living/silicon/robot/triggerAlarm]
+ * * alarmsource - [/atom] source of the alarm
+ */
 /mob/living/simple_animal/drone/proc/triggerAlarm(class, area/home, cameras, obj/source)
 	if(source.virtual_z() != virtual_z())
 		return
@@ -276,13 +276,13 @@
 	return
 
 /**
-  * Clears alarm and alerts drones
-  *
-  * Arguments:
-  * * class - One of the keys listed in [/mob/living/simple_animal/drone/var/alarms]
-  * * A - [/area] the alarm occurs
-  * * alarmsource - [/atom] source of the alarm
-  */
+ * Clears alarm and alerts drones
+ *
+ * Arguments:
+ * * class - One of the keys listed in [/mob/living/simple_animal/drone/var/alarms]
+ * * A - [/area] the alarm occurs
+ * * alarmsource - [/atom] source of the alarm
+ */
 /mob/living/simple_animal/drone/proc/cancelAlarm(class, area/A, obj/origin)
 	if(stat != DEAD)
 		var/list/L = alarms[class]
@@ -321,7 +321,3 @@
 
 /mob/living/simple_animal/drone/electrocute_act(shock_damage, source, siemens_coeff, flags = NONE)
 	return 0 //So they don't die trying to fix wiring
-
-/mob/living/simple_animal/drone/get_bank_account(hand_first)
-	return SSeconomy.get_dep_account(ACCOUNT_CIV)
-

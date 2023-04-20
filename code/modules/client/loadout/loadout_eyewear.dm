@@ -2,7 +2,6 @@
 	subtype_path = /datum/gear/eyewear
 	slot = ITEM_SLOT_EYES
 	sort_category = "Eyewear"
-	cost = 500
 
 //Prescription glasses
 /datum/gear/eyewear/glasses
@@ -33,12 +32,15 @@
 /datum/gear/eyewear/blindfold
 	display_name = "blindfold"
 	path = /obj/item/clothing/glasses/blindfold
-	cost = 750
+
+/datum/gear/eyewear/trickblindfold
+	display_name = "trick blindfold"
+	description = "A blindfold you can still see through."
+	path = /obj/item/clothing/glasses/trickblindfold
 
 /datum/gear/eyewear/hipster_glasses
 	display_name = "Hipster Glasses"
 	path = /obj/item/clothing/glasses/regular/hipster
-	cost = 1250
 
 /datum/gear/eyewear/glasses/cold
 	display_name = "cold goggles"

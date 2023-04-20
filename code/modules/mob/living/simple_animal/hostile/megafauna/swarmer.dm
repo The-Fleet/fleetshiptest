@@ -103,9 +103,8 @@ GLOBAL_LIST_INIT(AISwarmerCapsByType, list(/mob/living/simple_animal/hostile/swa
 /mob/living/simple_animal/hostile/swarmer/ai/Initialize()
 	. = ..()
 	ToggleLight() //so you can see them eating you out of house and home/shooting you/stunlocking you for eternity
-	LAZYINITLIST(GLOB.AISwarmersByType[type])
-	GLOB.AISwarmers += src
-	GLOB.AISwarmersByType[type] += src
+	LAZYADD(GLOB.AISwarmers, src)
+	GLOB.AISwarmersByType[type] += list(src)
 
 
 /mob/living/simple_animal/hostile/swarmer/ai/Destroy()

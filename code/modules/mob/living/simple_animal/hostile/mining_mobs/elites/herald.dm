@@ -4,26 +4,29 @@
 #define HERALD_MIRROR 4
 
 /**
-  * # Herald
-  *
-  * A slow-moving projectile user with a few tricks up it's sleeve.  Less unga-bunga than Colossus, with more cleverness in it's fighting style.
-  * As it's health gets lower, the amount of projectiles fired per-attack increases.
-  * It's attacks are as follows:
-  * - Fires three projectiles in a a given direction.
-  * - Fires a spread in every cardinal and diagonal direction at once, then does it again after a bit.
-  * - Shoots a single, golden bolt.  Wherever it lands, the herald will be teleported to the location.
-  * - Spawns a mirror which reflects projectiles directly at the target.
-  * Herald is a more concentrated variation of the Colossus fight, having less projectiles overall, but more focused attacks.
-  */
+ * # Herald
+ *
+ * A slow-moving projectile user with a few tricks up it's sleeve.  Less unga-bunga than Colossus, with more cleverness in it's fighting style.
+ * As it's health gets lower, the amount of projectiles fired per-attack increases.
+ * It's attacks are as follows:
+ * - Fires three projectiles in a a given direction.
+ * - Fires a spread in every cardinal and diagonal direction at once, then does it again after a bit.
+ * - Shoots a single, golden bolt.  Wherever it lands, the herald will be teleported to the location.
+ * - Spawns a mirror which reflects projectiles directly at the target.
+ * Herald is a more concentrated variation of the Colossus fight, having less projectiles overall, but more focused attacks.
+ */
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald
 	name = "herald"
 	desc = "A monstrous beast which fires deadly projectiles at threats and prey."
+	icon = 'icons/mob/lavaland/lavaland_elites_64.dmi'
 	icon_state = "herald"
 	icon_living = "herald"
 	icon_aggro = "herald"
 	icon_dead = "herald_dying"
 	icon_gib = "syndicate_gib"
+	pixel_x = -16
+	base_pixel_x = -16
 	health_doll_icon = "herald"
 	maxHealth = 800
 	health = 800
@@ -60,7 +63,7 @@
 /mob/living/simple_animal/hostile/asteroid/elite/herald/proc/become_ghost()
 	icon_state = "herald_ghost"
 
-/mob/living/simple_animal/hostile/asteroid/elite/herald/say(message, bubble_type, var/list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/living/simple_animal/hostile/asteroid/elite/herald/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	. = ..()
 	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 20, TRUE)
 
@@ -123,7 +126,7 @@
 		if(HERALD_MIRROR)
 			herald_mirror()
 
-/mob/living/simple_animal/hostile/asteroid/elite/herald/proc/shoot_projectile(turf/marker, set_angle, var/is_teleshot)
+/mob/living/simple_animal/hostile/asteroid/elite/herald/proc/shoot_projectile(turf/marker, set_angle, is_teleshot)
 	var/turf/startloc = get_turf(src)
 	var/obj/projectile/herald/H = null
 	if(!is_teleshot)
@@ -195,6 +198,9 @@
 	health = 60
 	maxHealth = 60
 	icon_state = "herald_mirror"
+	icon_aggro = "herald_mirror"
+	pixel_x = -16
+	base_pixel_x = -16
 	deathmessage = "shatters violently!"
 	deathsound = 'sound/effects/glassbr1.ogg'
 	movement_type = FLYING
@@ -203,7 +209,7 @@
 	var/mob/living/simple_animal/hostile/asteroid/elite/herald/my_master = null
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/Initialize()
-	..()
+	. = ..()
 	toggle_ai(AI_OFF)
 
 /mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/Destroy()

@@ -163,7 +163,7 @@
 /obj/item/reagent_containers/food/snacks/meat/slab/meatproduct
 	name = "meat product"
 	icon_state = "meatproduct"
-	desc = "A slab of station reclaimed and chemically processed meat product."
+	desc = "A slab of reclaimed and chemically processed meat product."
 	cooked_type = /obj/item/reagent_containers/food/snacks/meat/steak/meatproduct
 	tastes = list("meat flavoring" = 2, "modified starches" = 2, "natural & artificial dyes" = 1, "butyric acid" = 1)
 	foodtype = RAW | MEAT
@@ -175,6 +175,11 @@
 /obj/item/reagent_containers/food/snacks/meat/slab/mouse
 	name = "mouse meat"
 	desc = "A slab of mouse meat. Best not eat it raw."
+	foodtype = RAW | MEAT | GROSS
+
+/obj/item/reagent_containers/food/snacks/meat/slab/mothroach
+	name = "mothroach meat"
+	desc = "A light slab of meat."
 	foodtype = RAW | MEAT | GROSS
 
 /obj/item/reagent_containers/food/snacks/meat/slab/corgi

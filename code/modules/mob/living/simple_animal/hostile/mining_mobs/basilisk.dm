@@ -107,13 +107,19 @@
 ******************************************/
 
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands
-	armor = list("melee" = 30, "bullet" = 30, "laser" = 100, "energy" = 100, "bomb" = 30, "bio" = 30, "rad" = 30, "fire" = 30, "acid" = 30)
+	desc = "A native beast of sand planets. This unique mutation has evolved to develop a shell around it's body, deflecting all attacks until broken."
+	icon_state = "basilisk_whitesands"
+	icon_living = "basilisk_whitesands"
+	icon_aggro = "basilisk_whitesands"
+	icon_dead = "basilisk_whitesands_dead"
+	armor = list("melee" = 100, "bullet" = 100, "laser" = 100, "energy" = 100, "bomb" = 30, "bio" = 30, "rad" = 30, "fire" = 30, "acid" = 30)
 	attack_same = TRUE		// So we'll attack watchers
 	butcher_results = list(/obj/item/stack/sheet/sinew = 4, /obj/item/stack/sheet/bone = 2)
 	lava_drinker = FALSE
 	var/shell_health = 50
 	var/has_shell = TRUE
 	var/list/shell_loot = list(/obj/item/stack/ore/diamond, /obj/item/stack/ore/diamond)
+	var/shell_snap_message = FALSE
 
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/proc/shell_damage(dam_amount)
 	if(has_shell)
@@ -123,7 +129,14 @@
 			armor = null		// Armor comes from the shell
 			for(var/l in shell_loot)
 				new l(loc)
+			if(!shell_snap_message)
+				playsound(src, "shatter", 80, FALSE)
+				audible_message("<span class='danger'>[src]'s shell violently cracks as it's armor is shattered!</span>")
+				throw_message = "bounces off of"
+				shell_snap_message = TRUE //so it doesnt repeat
+		update_icon()
 		return TRUE
+	update_icon()
 	return FALSE
 
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/CanAttack(atom/the_target)
@@ -145,6 +158,8 @@
 
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/bullet_act(obj/projectile/P)
 	shell_damage(BULLET_SHELL_DAMAGE)
+	if(has_shell)
+		visible_message("<span class='notice'>The [P] is absorbed by the [src]'s shell, dealing minimal damage!</span>") //make it less confusing when bullets do no damage
 	return ..()
 
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
@@ -158,6 +173,28 @@
 			new l(loc)
 	..()
 
+/mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/Aggro()
+	..()
+	var/mutable_appearance/angry = mutable_appearance(icon, "basilisk_sands_charge")
+	add_overlay(angry)
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/LoseAggro()
+	..()
+	cut_overlays()
+
+/mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/update_icon()
+	. = ..()
+	if(stat == CONSCIOUS)
+		if(has_shell)
+			if(shell_health >= initial(shell_health)*0.5)
+				icon_state = "basilisk_whitesands"
+			else if(shell_health < initial(shell_health)*0.5)
+				icon_state = "basilisk_whitesands_shell50"
+		else
+			icon_state = "basilisk_whitesands_shell0"
+	else
+		icon_state = "basilisk_whitesands_dead"
+
 /mob/living/simple_animal/hostile/asteroid/basilisk/whitesands/heat
 	name = "glowing basilisk"
 	projectiletype = /obj/projectile/temp/basilisk/heated
@@ -169,14 +206,14 @@
 /mob/living/simple_animal/hostile/asteroid/basilisk/watcher
 	name = "watcher"
 	desc = "A levitating, eye-like creature held aloft by winglike formations of sinew. A sharp spine of crystal protrudes from its body."
-	icon = 'icons/mob/lavaland/watcher.dmi'
+	icon = 'icons/mob/lavaland/lavaland_monsters_wide.dmi'
 	icon_state = "watcher"
 	icon_living = "watcher"
 	icon_aggro = "watcher"
 	icon_dead = "watcher_dead"
 	health_doll_icon = "watcher"
-	pixel_x = -10
-	base_pixel_x = -10
+	pixel_x = -12
+	base_pixel_x = -12
 	throw_message = "bounces harmlessly off of"
 	melee_damage_lower = 5
 	melee_damage_upper = 12
@@ -305,6 +342,7 @@
 /mob/living/simple_animal/hostile/asteroid/basilisk/watcher/forgotten
 	name = "forgotten watcher"
 	desc = "This watcher has a cancerous crystal growth on it, forever scarring it and deforming it into this twisted form."
+	icon = 'icons/mob/lavaland/watcher.dmi'
 	icon_state = "forgotten"
 	icon_living = "forgotten"
 	icon_aggro = "forgotten"

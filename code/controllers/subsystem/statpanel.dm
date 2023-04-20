@@ -2,6 +2,7 @@ SUBSYSTEM_DEF(statpanels)
 	name = "Stat Panels"
 	wait = 4
 	init_order = INIT_ORDER_STATPANELS
+	init_stage = INITSTAGE_EARLY
 	runlevels = RUNLEVELS_DEFAULT | RUNLEVEL_LOBBY
 	var/list/currentrun = list()
 	var/encoded_global_data
@@ -16,7 +17,7 @@ SUBSYSTEM_DEF(statpanels)
 			"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
 			"Time Dilation: [round(SStime_track.time_dilation_current,1)]% AVG:([round(SStime_track.time_dilation_avg_fast,1)]%, [round(SStime_track.time_dilation_avg,1)]%, [round(SStime_track.time_dilation_avg_slow,1)]%)",
 			"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
-			"Station Time: [station_time_timestamp()]",
+			"Local Time: [station_time_timestamp()]",
 			"\n",
 			"Internal Round Timer: [SSticker.round_start_time ? time2text(game_round_time, "hh:mm:ss", 0) : "The round hasn't started yet!"]",
 			"Actual Round Timer: [SSticker.round_start_timeofday ? time2text(actual_round_time, "hh:mm:ss", 0) : "The round hasn't started yet!"]",
@@ -33,7 +34,7 @@ SUBSYSTEM_DEF(statpanels)
 	while(length(currentrun))
 		var/client/target = currentrun[length(currentrun)]
 		currentrun.len--
-		if(!target.statbrowser_ready)
+		if(!target?.statbrowser_ready)
 			continue
 		if(target.stat_tab == "Status")
 			var/ping_str = url_encode("Ping: [round(target.lastping, 1)]ms (Average: [round(target.avgping, 1)]ms)")

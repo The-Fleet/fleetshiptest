@@ -12,19 +12,20 @@
 	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	var/mob/living/carbon/owner = null
 	var/datum/weakref/original_owner = null
-	var/needs_processing = FALSE
 	///If you'd like to know if a bodypart is organic, please use is_organic_limb()
 	var/bodytype = BODYTYPE_HUMANOID | BODYTYPE_ORGANIC //List of bodytypes flags, important for fitting clothing.
 	var/change_exempt_flags //Defines when a bodypart should not be changed. Example: BP_BLOCK_CHANGE_SPECIES prevents the limb from being overwritten on species gain
 
 	var/is_husked = FALSE //Duh
 	var/limb_id = SPECIES_HUMAN //This is effectively the icon_state for limbs.
-	var/limb_gender //Defines what sprite the limb should use if it is also sexually dimorphic.
+	var/limb_gender = "m" //Defines what sprite the limb should use if it is also sexually dimorphic.
 	var/uses_mutcolor = TRUE //Does this limb have a greyscale version?
 	var/is_dimorphic = FALSE //Is there a sprite difference between male and female?
 	var/draw_color //Greyscale draw color
 
 	var/body_zone //BODY_ZONE_CHEST, BODY_ZONE_L_ARM, etc , used for def_zone
+	/// The body zone of this part in english ("chest", "left arm", etc) without the species attached to it
+	var/plaintext_zone
 	var/aux_zone // used for hands
 	var/aux_layer
 	var/body_part = null //bitflag used to check which clothes cover this bodypart
@@ -59,7 +60,6 @@
 
 	//Coloring and proper item icon update
 	var/skin_tone = ""
-	var/should_draw_gender = FALSE
 	var/should_draw_greyscale = TRUE //Limbs need this information as a back-up incase they are generated outside of a carbon (limbgrower)
 	var/species_color = ""
 	var/mutation_color = ""
@@ -168,8 +168,10 @@
 		I.forceMove(T)
 
 //Return TRUE to get whatever mob this is in to update health.
-/obj/item/bodypart/proc/on_life(stam_regen)
-	if(stamina_dam > DAMAGE_PRECISION && stam_regen)					//DO NOT update health here, it'll be done in the carbon's life.
+/obj/item/bodypart/proc/on_life()
+	SHOULD_CALL_PARENT(TRUE)
+
+	if(stamina_dam > DAMAGE_PRECISION && owner.stam_regen_start_time <= world.time)					//DO NOT update health here, it'll be done in the carbon's life.
 		heal_damage(0, 0, INFINITY, null, FALSE)
 		. |= BODYPART_LIFE_UPDATE_HEALTH
 
@@ -284,10 +286,6 @@
 		return
 	. = stamina_dam
 	stamina_dam = new_value
-	if(stamina_dam > DAMAGE_PRECISION)
-		needs_processing = TRUE
-	else
-		needs_processing = FALSE
 
 
 //Returns total damage.
@@ -449,8 +447,8 @@
 //Updates an organ's brute/burn states for use by update_damage_overlays()
 //Returns 1 if we need to update overlays. 0 otherwise.
 /obj/item/bodypart/proc/update_bodypart_damage_state()
-	var/tbrute	= round( (brute_dam/max_damage)*3, 1 )
-	var/tburn	= round( (burn_dam/max_damage)*3, 1 )
+	var/tbrute	= round((brute_dam/max_damage)*3, 1)
+	var/tburn	= round((burn_dam/max_damage)*3, 1)
 	if((tbrute != brutestate) || (tburn != burnstate))
 		brutestate = tbrute
 		burnstate = tburn
@@ -528,27 +526,21 @@
 
 	if(!animal_origin && ishuman(C))
 		var/mob/living/carbon/human/H = C
-		should_draw_greyscale = FALSE
 
 		var/datum/species/S = H.dna.species
 		species_flags_list = H.dna.species.species_traits //Literally only exists for a single use of NOBLOOD, but, no reason to remove it i guess...?
+		limb_gender = (H.gender == MALE) ? "m" : "f"
 
 		if(S.use_skintones)
 			skin_tone = H.skin_tone
-			should_draw_greyscale = TRUE
 		else
 			skin_tone = ""
-
-		should_draw_gender = S.sexes
-		if(should_draw_gender) //Assigns the limb a gender for rendering
-			limb_gender = (H.gender == MALE) ? "m" : "f"
 
 		if(((MUTCOLORS in S.species_traits) || (DYNCOLORS in S.species_traits)) && uses_mutcolor) //Ethereal code. Motherfuckers.
 			if(S.fixed_mut_color)
 				species_color = S.fixed_mut_color
 			else
 				species_color = H.dna.features["mcolor"]
-			should_draw_greyscale = TRUE
 		else
 			species_color = null
 
@@ -593,7 +585,7 @@
 	. = list()
 
 	//Handles dropped icons
-	var/image_dir = 0
+	var/image_dir = NONE
 	if(dropped)
 		image_dir = SOUTH
 		if(dmg_overlay_type)
@@ -604,7 +596,7 @@
 
 	var/image/limb = image(layer = -BODYPARTS_LAYER, dir = image_dir)
 	var/image/aux
-	. += limb
+	//. += limb
 
 	if(animal_origin) //Cringe ass animal-specific code.
 		if(IS_ORGANIC_LIMB(src))
@@ -616,11 +608,13 @@
 		else
 			limb.icon = 'icons/mob/augmentation/augments.dmi'
 			limb.icon_state = "[animal_origin]_[body_zone]"
+		. += limb
 		return
 
 	if(is_husked)
 		limb.icon = husk_icon
 		limb.icon_state = "[husk_type]_husk_[body_zone]"
+		. += limb
 		if(aux_zone) //Hand shit
 			aux = image(limb.icon, "[husk_type]_husk_[aux_zone]", -aux_layer, image_dir)
 			. += aux
@@ -636,18 +630,49 @@
 	else
 		limb.icon_state = "[limb_id]_[body_zone]"
 
-	if(aux_zone) //Hand shit
-		aux = image(limb.icon, "[limb_id]_[aux_zone]", -aux_layer, image_dir)
-		. += aux
+	if(!icon_exists(limb.icon, limb.icon_state))
+		limb_stacktrace("Limb generated with nonexistant icon. File: [limb.icon] | State: [limb.icon_state]", GLOB.Debug) //If you *really* want more of these, you can set the *other* global debug flag manually.
 
-	draw_color = mutation_color
-	if(should_draw_greyscale) //Should the limb be colored?
-		draw_color ||= (species_color) || (skin_tone && skintone2hex(skin_tone))
+	if(!is_husked)
+		. += limb
 
-	if(draw_color)
-		limb.color = "#[draw_color]"
-		if(aux_zone)
-			aux.color = "#[draw_color]"
+		if(aux_zone) //Hand shit
+			aux = image(limb.icon, "[limb_id]_[aux_zone]", -aux_layer, image_dir)
+			. += aux
+
+		draw_color = mutation_color
+		if(should_draw_greyscale) //Should the limb be colored outside of a forced color?
+			draw_color ||= (species_color) || (skin_tone && skintone2hex(skin_tone))
+
+		if(draw_color)
+			limb.color = "#[draw_color]"
+			if(aux_zone)
+				aux.color = "#[draw_color]"
+
+	//Ok so legs are a bit goofy in regards to layering, and we will need two images instead of one to fix that
+	if((body_zone == BODY_ZONE_R_LEG) || (body_zone == BODY_ZONE_L_LEG))
+		var/obj/item/bodypart/leg/leg_source = src
+		for(var/image/limb_image in .)
+			//remove the old, unmasked image
+			. -= limb_image
+			//add two masked images based on the old one
+			. += leg_source.generate_masked_leg(limb_image, image_dir)
+
+	/*if(!is_husked)
+		//Draw external organs like horns and frills
+		for(var/obj/item/organ/external/external_organ as anything in external_organs)
+			if(!dropped && !external_organ.can_draw_on_bodypart(owner))
+				continue
+			//Some externals have multiple layers for background, foreground and between
+			for(var/external_layer in external_organ.all_layers)
+				if(external_organ.layers & external_layer)
+					external_organ.generate_and_retrieve_overlays(
+						.,
+						image_dir,
+						external_organ.bitflag_to_layer(external_layer),
+						limb_gender,
+					)*/
+	return .
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)
 	drop_organs()
@@ -661,14 +686,16 @@
 /obj/item/bodypart/proc/break_bone()
 	if(!can_break_bone())
 		return
+	if (bone_status == BONE_FLAG_NORMAL && body_part & LEGS) // Because arms are not legs
+		owner.set_broken_legs(owner.broken_legs + 1)
 	bone_status = BONE_FLAG_BROKEN
-	owner.set_broken_legs(owner.broken_legs + 1)
 	addtimer(CALLBACK(owner, /atom/.proc/visible_message, "<span class='danger'>You hear a cracking sound coming from [owner]'s [name].</span>", "<span class='userdanger'>You feel something crack in your [name]!</span>", "<span class='danger'>You hear an awful cracking sound.</span>"), 1 SECONDS)
 
 /obj/item/bodypart/proc/fix_bone()
-	bone_status = BONE_FLAG_NORMAL
 	// owner.update_inv_splints() breaks
-	owner.set_broken_legs(owner.broken_legs - 1)
+	if (bone_status != BONE_FLAG_NORMAL && body_part & LEGS)
+		owner.set_broken_legs(owner.broken_legs - 1)
+	bone_status = BONE_FLAG_NORMAL
 
 /obj/item/bodypart/proc/on_mob_move()
 	// Dont trigger if it isn't broken or if it has no owner

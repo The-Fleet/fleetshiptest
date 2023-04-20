@@ -28,7 +28,7 @@
 	. = ..()
 	if(length(new_baseturfs) > 1 || fake_turf_type)
 		return // More complicated larger changes indicate this isn't a player
-	if(ispath(new_baseturfs[1], /turf/open/floor/plating) && !new_baseturfs.Find(/turf/baseturf_skipover/shuttle))
+	if(ispath(new_baseturfs[1], /turf/open/floor/plating) && !(/turf/baseturf_skipover/shuttle in new_baseturfs))
 		new_baseturfs.Insert(1, /turf/baseturf_skipover/shuttle)
 
 /area/shuttle/proc/link_to_shuttle(obj/docking_port/mobile/M)
@@ -113,7 +113,7 @@
 /area/shuttle/custom
 	name = "Custom player shuttle"
 	area_flags = BLOBS_ALLOWED
-	flags_1 = CAN_BE_DIRTY_1 | CULT_PERMITTED_1
+	flags_1 = CAN_BE_DIRTY_1
 
 /area/shuttle/custom/powered
 	name = "Custom Powered player shuttle"
@@ -156,7 +156,7 @@
 /area/shuttle/escape
 	name = "Emergency Shuttle"
 	area_flags = BLOBS_ALLOWED
-	flags_1 = CAN_BE_DIRTY_1 | CULT_PERMITTED_1
+	flags_1 = CAN_BE_DIRTY_1
 
 /area/shuttle/escape/backup
 	name = "Backup Emergency Shuttle"
@@ -171,7 +171,6 @@
 
 /area/shuttle/escape/meteor
 	name = "\proper a meteor with engines strapped to it"
-	luminosity = NONE
 
 /area/shuttle/transport
 	name = "Transport Shuttle"

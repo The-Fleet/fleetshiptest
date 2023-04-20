@@ -6,6 +6,7 @@
 	inherent_traits = list(TRAIT_RESISTHEAT,TRAIT_NOBREATH,TRAIT_RESISTCOLD,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_NOFIRE,TRAIT_CHUNKYFINGERS,TRAIT_RADIMMUNE,TRAIT_GENELESS,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER)
 	inherent_biotypes = MOB_HUMANOID|MOB_MINERAL
 	mutant_organs = list(/obj/item/organ/adamantine_resonator)
+	mutanttongue = /obj/item/organ/tongue/golem_base
 	speedmod = 2
 	armor = 55
 	siemens_coeff = 0
@@ -26,8 +27,8 @@
 	species_head = /obj/item/bodypart/head/golem
 	species_l_arm = /obj/item/bodypart/l_arm/golem
 	species_r_arm = /obj/item/bodypart/r_arm/golem
-	species_l_leg = /obj/item/bodypart/l_leg/golem
-	species_r_leg = /obj/item/bodypart/r_leg/golem
+	species_l_leg = /obj/item/bodypart/leg/left/golem
+	species_r_leg = /obj/item/bodypart/leg/right/golem
 
 	fixed_mut_color = "aaa"
 	var/info_text = "As an <span class='danger'>Iron Golem</span>, you don't have any special traits."
@@ -272,8 +273,8 @@
 	species_head = /obj/item/bodypart/head/golem/alloy
 	species_l_arm = /obj/item/bodypart/l_arm/golem/alloy
 	species_r_arm = /obj/item/bodypart/r_arm/golem/alloy
-	species_l_leg = /obj/item/bodypart/l_leg/golem/alloy
-	species_r_leg = /obj/item/bodypart/r_leg/golem/alloy
+	species_l_leg = /obj/item/bodypart/leg/left/golem/alloy
+	species_r_leg = /obj/item/bodypart/leg/right/golem/alloy
 
 //Regenerates because self-repairing super-advanced alien tech
 /datum/species/golem/alloy/spec_life(mob/living/carbon/human/H)
@@ -323,7 +324,8 @@
 	if(chem.type == /datum/reagent/toxin/plantbgone)
 		H.adjustToxLoss(3)
 		H.reagents.remove_reagent(chem.type, REAGENTS_METABOLISM)
-		return 1
+		return TRUE
+	return ..()
 
 //Radioactive
 /datum/species/golem/uranium
@@ -513,7 +515,6 @@
 	name = "Bananium Golem"
 	id = "bananium golem"
 	fixed_mut_color = "ff0"
-	say_mod = "honks"
 	punchdamagelow = 0
 	punchdamagehigh = 1
 	punchstunthreshold = 2 //Harmless and can't stun
@@ -523,13 +524,14 @@
 	attack_sound = 'sound/items/airhorn2.ogg'
 	prefix = "Bananium"
 	special_names = null
+	mutanttongue = /obj/item/organ/tongue/golem_honk
 
 	species_chest = /obj/item/bodypart/chest/golem/bananium
 	species_head = /obj/item/bodypart/head/golem/bananium
 	species_l_arm = /obj/item/bodypart/l_arm/golem/bananium
 	species_r_arm = /obj/item/bodypart/r_arm/golem/bananium
-	species_l_leg = /obj/item/bodypart/l_leg/golem/bananium
-	species_r_leg = /obj/item/bodypart/r_leg/golem/bananium
+	species_l_leg = /obj/item/bodypart/leg/left/golem/bananium
+	species_r_leg = /obj/item/bodypart/leg/right/golem/bananium
 
 	var/last_honk = 0
 	var/honkooldown = 0
@@ -619,8 +621,8 @@
 	species_head = /obj/item/bodypart/head/golem/cult
 	species_l_arm = /obj/item/bodypart/l_arm/golem/cult
 	species_r_arm = /obj/item/bodypart/r_arm/golem/cult
-	species_l_leg = /obj/item/bodypart/l_leg/golem/cult
-	species_r_leg = /obj/item/bodypart/r_leg/golem/cult
+	species_l_leg = /obj/item/bodypart/leg/left/golem/cult
+	species_r_leg = /obj/item/bodypart/leg/right/golem/cult
 
 /datum/species/golem/runic/random_name(gender,unique,lastname)
 	var/edgy_first_name = pick("Razor","Blood","Dark","Evil","Cold","Pale","Black","Silent","Chaos","Deadly","Coldsteel")
@@ -650,7 +652,7 @@
 		C.RemoveSpell(dominate)
 
 /datum/species/golem/runic/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
-	if(istype(chem, /datum/reagent/water/holywater))
+	if(chem.type == /datum/reagent/water/holywater)
 		H.adjustFireLoss(4)
 		H.reagents.remove_reagent(chem.type, REAGENTS_METABOLISM)
 
@@ -658,6 +660,7 @@
 		H.adjustBruteLoss(-4)
 		H.adjustFireLoss(-4)
 		H.reagents.remove_reagent(chem.type, REAGENTS_METABOLISM)
+	return ..()
 
 /datum/species/golem/cloth
 	name = "Cloth Golem"
@@ -681,8 +684,8 @@
 	species_head = /obj/item/bodypart/head/golem/cloth
 	species_l_arm = /obj/item/bodypart/l_arm/golem/cloth
 	species_r_arm = /obj/item/bodypart/r_arm/golem/cloth
-	species_l_leg = /obj/item/bodypart/l_leg/golem/cloth
-	species_r_leg = /obj/item/bodypart/r_leg/golem/cloth
+	species_l_leg = /obj/item/bodypart/leg/left/golem/cloth
+	species_r_leg = /obj/item/bodypart/leg/right/golem/cloth
 
 /datum/species/golem/cloth/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	..()
@@ -803,7 +806,7 @@
 	special_names = list("Bell")
 	fixed_mut_color = "cd7f32"
 	info_text = "As a <span class='danger'>Bronze Golem</span>, you are very resistant to loud noises, and make loud noises if something hard hits you, however this ability does hurt your hearing."
-	special_step_sounds = list('sound/machines/clockcult/integration_cog_install.ogg', 'sound/magic/clockwork/fellowship_armory.ogg' )
+	special_step_sounds = list('sound/machines/clockcult/integration_cog_install.ogg', 'sound/magic/clockwork/fellowship_armory.ogg')
 	mutantears = /obj/item/organ/ears/bronze
 	var/last_gong_time = 0
 	var/gong_cooldown = 150
@@ -891,8 +894,8 @@
 	species_head = /obj/item/bodypart/head/golem/cardboard
 	species_l_arm = /obj/item/bodypart/l_arm/golem/cardboard
 	species_r_arm = /obj/item/bodypart/r_arm/golem/cardboard
-	species_l_leg = /obj/item/bodypart/l_leg/golem/cardboard
-	species_r_leg = /obj/item/bodypart/r_leg/golem/cardboard
+	species_l_leg = /obj/item/bodypart/leg/left/golem/cardboard
+	species_r_leg = /obj/item/bodypart/leg/right/golem/cardboard
 
 /datum/species/golem/cardboard/spec_attacked_by(obj/item/I, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/carbon/human/H)
 	. = ..()
@@ -915,7 +918,7 @@
 			to_chat(H, "<span class='notice'>You create a new cardboard golem shell.</span>")
 			create_brother(H.loc)
 
-/datum/species/golem/cardboard/proc/create_brother(var/location)
+/datum/species/golem/cardboard/proc/create_brother(location)
 	new /obj/effect/mob_spawn/human/golem/servant(location, /datum/species/golem/cardboard, owner)
 	last_creation = world.time
 
@@ -943,8 +946,8 @@
 	species_head = /obj/item/bodypart/head/golem/durathread
 	species_l_arm = /obj/item/bodypart/l_arm/golem/durathread
 	species_r_arm = /obj/item/bodypart/r_arm/golem/durathread
-	species_l_leg = /obj/item/bodypart/l_leg/golem/durathread
-	species_r_leg = /obj/item/bodypart/r_leg/golem/durathread
+	species_l_leg = /obj/item/bodypart/leg/left/golem/durathread
+	species_r_leg = /obj/item/bodypart/leg/right/golem/durathread
 
 /datum/species/golem/durathread/spec_unarmedattacked(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
@@ -953,7 +956,6 @@
 /datum/species/golem/bone
 	name = "Bone Golem"
 	id = "bone golem"
-	say_mod = "rattles"
 	prefix = "Bone"
 	special_names = list("Head", "Broth", "Fracture", "Rattler", "Appetit")
 	liked_food = GROSS | MEAT | RAW
@@ -972,8 +974,8 @@
 	species_head = /obj/item/bodypart/head/golem/bone
 	species_l_arm = /obj/item/bodypart/l_arm/golem/bone
 	species_r_arm = /obj/item/bodypart/r_arm/golem/bone
-	species_l_leg = /obj/item/bodypart/l_leg/golem/bone
-	species_r_leg = /obj/item/bodypart/r_leg/golem/bone
+	species_l_leg = /obj/item/bodypart/leg/left/golem/bone
+	species_r_leg = /obj/item/bodypart/leg/right/golem/bone
 
 /datum/species/golem/bone/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	..()
@@ -987,7 +989,6 @@
 	..()
 
 /datum/species/golem/bone/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
-	. = ..()
 	if(chem.type == /datum/reagent/consumable/milk)
 		if(chem.volume > 10)
 			H.reagents.remove_reagent(chem.type, chem.volume - 10)
@@ -1020,6 +1021,8 @@
 					H.emote("sigh")
 		H.reagents.remove_reagent(chem.type, chem.metabolization_rate)
 		return TRUE
+
+	return ..()
 
 /datum/action/innate/bonechill
 	name = "Bone Chill"
@@ -1075,8 +1078,8 @@
 	species_head = /obj/item/bodypart/head/golem/snow
 	species_l_arm = /obj/item/bodypart/l_arm/golem/snow
 	species_r_arm = /obj/item/bodypart/r_arm/golem/snow
-	species_l_leg = /obj/item/bodypart/l_leg/golem/snow
-	species_r_leg = /obj/item/bodypart/r_leg/golem/snow
+	species_l_leg = /obj/item/bodypart/leg/left/golem/snow
+	species_r_leg = /obj/item/bodypart/leg/right/golem/snow
 
 /datum/species/golem/snow/spec_death(gibbed, mob/living/carbon/human/H)
 	H.visible_message("<span class='danger'>[H] turns into a pile of snow!</span>")
@@ -1173,7 +1176,7 @@
 
 /datum/species/golem/soviet/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
-	C.equip_to_slot_or_del(new /obj/item/clothing/head/ushanka (), ITEM_SLOT_HEAD)
+	C.equip_to_slot_or_del(new /obj/item/clothing/head/trapper (), ITEM_SLOT_HEAD)
 	C.revive(full_heal = TRUE, admin_revive = FALSE)
 
 	SEND_SOUND(C, sound('sound/misc/Russian_Anthem_chorus.ogg'))

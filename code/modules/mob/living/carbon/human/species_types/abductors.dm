@@ -1,7 +1,6 @@
 /datum/species/abductor
 	name = "\improper Abductor"
 	id = SPECIES_ABDUCTOR
-	say_mod = "gibbers"
 	sexes = FALSE
 	species_traits = list(NOBLOOD,NOEYESPRITES,NO_BONES)
 	inherent_traits = list(TRAIT_VIRUSIMMUNE,TRAIT_CHUNKYFINGERS,TRAIT_NOHUNGER,TRAIT_NOBREATH)
@@ -13,8 +12,8 @@
 	species_head = /obj/item/bodypart/head/abductor
 	species_l_arm = /obj/item/bodypart/l_arm/abductor
 	species_r_arm = /obj/item/bodypart/r_arm/abductor
-	species_l_leg = /obj/item/bodypart/l_leg/abductor
-	species_r_leg = /obj/item/bodypart/r_leg/abductor
+	species_l_leg = /obj/item/bodypart/leg/left/abductor
+	species_r_leg = /obj/item/bodypart/leg/right/abductor
 
 /datum/species/abductor/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	. = ..()
